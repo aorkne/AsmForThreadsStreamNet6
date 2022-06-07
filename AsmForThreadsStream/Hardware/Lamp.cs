@@ -1,4 +1,5 @@
 ﻿using System;
+using Spectre.Console;
 
 namespace AsmForThreadsStream
 {
@@ -7,20 +8,20 @@ namespace AsmForThreadsStream
         private struct LampData
         {
             public int X, Y, W, H;
-            public uint Color;
+            public Color Color;
         }
 
         private static LampData[] lamps = new LampData[]
         {
-            new LampData() { X = 20, Y = 20, W = 150, H = 150, Color = 0xFFFF0000 },
-            new LampData() { X = 200, Y = 200, W = 150, H = 150, Color = 0xFF32CD32 },
-            new LampData() { X = 400, Y = 200, W = 150, H = 150, Color = 0xFF0000FF },
-            new LampData() { X = 0, Y = 300, W = 150, H = 150, Color = 0xFFFFFF00 },
+            new LampData() { X = 2, Y = 2, W = 15, H = 15, Color = Color.Red },
+            new LampData() { X = 20, Y = 20, W = 15, H = 15, Color = Color.Green },
+            new LampData() { X = 40, Y = 20, W = 15, H = 15, Color = Color.Blue },
+            new LampData() { X = 0, Y = 30, W = 15, H = 15, Color = Color.Yellow },
         };
 
         private static int _index;
 
-        public static NConsoleGraphics.ConsoleGraphics graphics = new NConsoleGraphics.ConsoleGraphics();
+        private static Canvas _canvas = new Canvas(60, 60);
 
         private LampData _data;
 
@@ -33,14 +34,29 @@ namespace AsmForThreadsStream
 
         public void TurnOn()
         {
-            graphics.FillRectangle(_data.Color, _data.X, _data.Y, _data.W, _data.H);
-            graphics.FlipPages();
+            DrawRectangle(_data);
         }
 
         public void TurnOff()
         {
-            graphics.FillRectangle(0xFF000000, _data.X, _data.Y, _data.W, _data.H);
-            graphics.FlipPages();
+            var blackData = _data;
+            blackData.Color = Color.Default;
+            DrawRectangle(blackData);
+        }
+
+        private void DrawRectangle(LampData ld)
+        {
+            AnsiConsole.Clear();
+
+            for (int i = 0; i < ld.W; i++)
+            {
+                for (int j = 0; j < ld.H; j++)
+                {
+                    _canvas.SetPixel(ld.X + i, ld.Y + j, ld.Color);
+                }
+            }
+
+            AnsiConsole.Write(_canvas);
         }
     }
 }
