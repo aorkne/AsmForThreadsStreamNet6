@@ -1,2 +1,3 @@
 # AsmForThreadsStream
-This is a repo for YouTube stream: https://youtu.be/I17mJeukJ34
+
+https://github.com/podkolzzzin/AsmForThreadsStream on .NET 6.0
